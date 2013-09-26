@@ -12,7 +12,7 @@ header = """<!DOCTYPE html>
 <html lang=en>
 <title>Interesting commits</title>
 <meta name="viewport" content="width=device-width">
-<link rel="stylesheet" href="table.css>\""""
+<link rel="stylesheet" href="table.css">"""
 
 
 def get_thead(caption):
