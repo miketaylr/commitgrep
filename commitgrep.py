@@ -49,8 +49,8 @@ def get_row(repo_url):
 
 
 def grep_logs(token, repo_url):
-        return subprocess.check_output(["git", "log", "-S{0}".format(token),
-                                        "--format=" + get_row(repo_url)])
+    return subprocess.check_output(["git", "log", "-S{0}".format(token),
+                                    "--format=" + get_row(repo_url)])
 
 
 def clone_repo(repo_url):
