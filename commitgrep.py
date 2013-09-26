@@ -5,21 +5,22 @@ import os
 import sys
 import shutil
 import argparse
+import datetime
 import subprocess
 
 
 header = """<!DOCTYPE html>
 <html lang=en>
-<title>Interesting commits</title>
+<title>commitgrep.py</title>
 <meta name="viewport" content="width=device-width">
 <link rel="stylesheet" href="table.css">"""
 
 
 def get_thead(caption):
     return """<table class="table table-responsive">
-<caption>Commits related to the token: {0}</caption>
+<caption>Commits related to the token: {0}, as of {1}</caption>
 <thead><tr><th>SHA</th><th>date</th><th>commit</th></tr></thead>
-""".format(caption)
+""".format(caption, datetime.datetime.now().strftime("%m-%d-%Y"))
 
 
 def get_repo_name(repo_url):
