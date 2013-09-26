@@ -14,4 +14,4 @@ To create a file named jquery.html which greps for commits that have something t
 
 Licensed under the [Mozilla Public License Version 2.0](http://www.mozilla.org/MPL/2.0/)
 
-*coming up with good names is hard.
+*coming up with good names is hard. This doesn't even use --grep, because that's limited to log messages. :|
