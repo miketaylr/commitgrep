@@ -59,13 +59,6 @@ def clone_repo(repo_url):
     os.chdir(os.getcwd() + '/' + get_repo_name(repo_url))
 
 
-def is_ghpages_branch():
-    '''Return True if we're currently on the gh-pages branch.'''
-    status = subprocess.check_output(["git", "status"])
-    if status.find("branch gh-pages") != -1:
-        return True
-
-
 def write_to_disk():
     print(header, file=out_file)
     for token in tokens:
@@ -76,14 +69,10 @@ def write_to_disk():
 
 
 def clean_up():
-    repo_name = get_repo_name(repo_url)
-    if is_ghpages_branch():
-        os.rename(repo_name + '.html', 'index.html')
-        repo_name = 'index.html'
     os.chdir(os.pardir)
-    shutil.rmtree(os.getcwd() + '/' + repo_name)
-    print("All cleaned up. See {0}.html for results."
-          .format(repo_name), file=sys.stdout)
+    shutil.rmtree(os.path.join(os.getcwd(), get_repo_name(repo_url)))
+    print("All cleaned up. See {0} for results.".format(out_file.name),
+          file=sys.stdout)
 
 
 if __name__ == '__main__':
