@@ -9,11 +9,13 @@ import datetime
 import subprocess
 
 
-header = """<!DOCTYPE html>
+def get_header(repo_name):
+    return """<!DOCTYPE html>
 <html lang=en>
-<title>commitgrep.py</title>
+<title>commitgrep.py results for {0}</title>
 <meta name="viewport" content="width=device-width">
-<link rel="stylesheet" href="table.css">"""
+<link rel="stylesheet" href="table.css">
+""".format(repo_name)
 
 
 def get_thead(caption):
@@ -61,7 +63,7 @@ def clone_repo(repo_url):
 
 
 def write_to_disk():
-    print(header, file=out_file)
+    print(get_header(get_repo_name(repo_url)), file=out_file)
     for token in tokens:
         print(get_thead(token), file=out_file)
         print(grep_logs(token, repo_url), file=out_file)
