@@ -19,8 +19,6 @@ If you pass in the optional `--email` argument, the script will send you an emai
 
 *TODO*: If it's the first time it is run, you'll get the output for the entire history of the repo. Subsequent repos will compare only the commits made since the last run, and if there's no match no email will be sent.
 
-Note: It should try to be smart and only email you the commits since the last time it was run (probs have a lastrun.txt with a single date in it). (you can use <since>..HEAD), store sha in head.txt). And then run it on a cron. or a threading.Timer.
-
 ### License
 
 Licensed under the [Mozilla Public License Version 2.0](http://www.mozilla.org/MPL/2.0/)
