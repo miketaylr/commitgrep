@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
-import os
-import re
-import sys
-import shutil
-import smtplib
 import argparse
 import datetime
+import os
+import re
+import shutil
+import smtplib
 import subprocess
+import sys
 
 
 def get_header(repo_name):
