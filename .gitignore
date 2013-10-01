@@ -1,2 +1,4 @@
 *.html
 !index.html
+#lol
+password.txt
