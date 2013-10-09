@@ -14,19 +14,21 @@ import sys
 def get_header(repo_name):
     '''Get the beginning of our HTML document (with inlined styles)'''
     css = open(os.path.join(os.getcwd(), os.pardir) + '/table.css', 'r').read()
-    return """<!DOCTYPE html>
+    header = """<!DOCTYPE html>
 <html lang=en>
 <title>commitgrep.py results for {0}</title>
 <meta name="viewport" content="width=device-width">
-<style>{1}</style>""".format(repo_name, css)
+<style>{1}</style>"""
+    return header.format(repo_name, css)
 
 
 def get_thead(caption):
     '''Return the beginning of a <table> with a <caption>'''
-    return """<table class="table table-responsive">
+    thead = """<table class="table table-responsive">
 <caption>Commits related to the token: {0}, as of {1}</caption>
 <thead><tr><th>SHA</th><th>date</th><th>commit</th></tr></thead>
-""".format(caption, date)
+"""
+    return thead.format(caption, date)
 
 
 def get_repo_name(repo_url):
@@ -41,17 +43,17 @@ def get_row(repo_url):
         %h: commit hash (abbreviated)
         %ar author date, relative
         %s: subject'''
+    tr = '''<tr><td><a href="https://{0}/commit/%H">%h</a></td>
+  <td>%ar</td>
+  <td>%s</td></tr>'''
+
     if repo_url.find('git@') == 0:  # e.g. git@github.com:foo/bar.git
         path = repo_url.split('@')[1]
     elif repo_url.find('https:') == 0:  # e.g., https://github.com/foo/bar.git
         path = repo_url.split('://')[1]
     else:
         raise Exception("Is this a git clone URL from github?")
-    return '''<tr>
-      <td><a href="https://{0}/commit/%H">%h</a></td>
-      <td>%ar</td>
-      <td>%s</td>
-    </tr>'''.format(path.replace(':', '/').replace('.git', ''))
+    return tr.format(path.replace(':', '/').replace('.git', ''))
 
 
 def grep_logs(token, repo_url):
