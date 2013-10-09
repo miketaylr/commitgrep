@@ -19,6 +19,7 @@ def get_header(repo_name):
 <title>commitgrep.py results for {0}</title>
 <meta name="viewport" content="width=device-width">
 <style>{1}</style>"""
+
     return header.format(repo_name, css)
 
 
@@ -26,8 +27,8 @@ def get_thead(caption):
     '''Return the beginning of a <table> with a <caption>'''
     thead = """<table class="table table-responsive">
 <caption>Commits related to the token: {0}, as of {1}</caption>
-<thead><tr><th>SHA</th><th>date</th><th>commit</th></tr></thead>
-"""
+<thead><tr><th>SHA</th><th>date</th><th>commit</th></tr></thead>"""
+
     return thead.format(caption, date)
 
 
