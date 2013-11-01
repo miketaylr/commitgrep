@@ -10,6 +10,8 @@ import smtplib
 import subprocess
 import sys
 
+has_run = False
+
 
 def get_header(repo_name):
     '''Get the beginning of our HTML document (with inlined styles)'''
@@ -40,10 +42,10 @@ def get_repo_name(repo_url):
 def get_row(repo_url):
     '''Creates a format string that is passed to git log (in the form of a
        table <tr> with the following format options:
-        %H: commit hash (long one)
-        %h: commit hash (abbreviated)
-        %ar author date, relative
-        %s: subject'''
+        %H:  commit hash (long one)
+        %h:  commit hash (abbreviated)
+        %ar: author date, relative
+        %s:  subject'''
     tr = '''<tr><td><a href="https://{0}/commit/%H">%h</a></td>
   <td>%ar</td>
   <td>%s</td></tr>'''
@@ -57,10 +59,43 @@ def get_row(repo_url):
     return tr.format(path.replace(':', '/').replace('.git', ''))
 
 
-def grep_logs(token, repo_url):
+def get_from_sha():
+    '''
+    If we've passed in the --nightly flag, this will return the SHA of the HEAD
+    of the last time we've grepped the logs. Otherwise, it returns an empty
+    string (which means search begins at the beginning of history.'''
+    if args.nightly:
+        global has_run
+        if not has_run:
+            try:
+                head_file = open(os.path.join(os.getcwd(), os.pardir)
+                                 + '/lasthead.txt', 'r')
+                last_known_head = head_file.readline()
+            except IOError:
+                print('Something went wrong with lasthead.txt!')
+                return None
+        else:
+            head_file = open(os.path.join(os.getcwd(), os.pardir)
+                             + '/lasthead.txt', 'w')
+            head_file.seek(0)
+            last_known_head = subprocess.check_output(["git", "rev-parse",
+                                                       "HEAD"]).rstrip()
+            print(last_known_head, file=head_file)
+            has_run = True
+        print(last_known_head)
+        return last_known_head
+    else:
+        return None
+
+
+def grep_logs(token, repo_url, from_sha=None):
     '''Make git do the actual work.'''
-    return subprocess.check_output(["git", "log", "-S{0}".format(token),
-                                    "--format=" + get_row(repo_url)])
+    command = ["git", "log", "-S{0}".format(token),
+               "--format=" + get_row(repo_url)]
+    if from_sha:
+        commit_range = from_sha + "...HEAD"
+        command.append(commit_range)
+    return subprocess.check_output(command)
 
 
 def clone_repo(repo_url):
@@ -98,7 +133,8 @@ def write_to_disk():
     print(get_header(repo_name), file=out_file)
     for token in tokens:
         print(get_thead(token), file=out_file)
-        print(grep_logs(token, repo_url) + "</table>", file=out_file)
+        print(grep_logs(token, repo_url, get_from_sha())
+              + "</table>", file=out_file)
     if email:
         if re.match(r'[^@]+@[^@]+\.[^@]+', email):
             send_email()
@@ -111,10 +147,9 @@ def clean_up():
     os.chdir(os.pardir)
     shutil.rmtree(os.path.join(os.getcwd(), repo_name))
     if not email:
-        print("All cleaned up. See {0} for results.".format(out_file.name),
-              file=sys.stdout)
+        print("All cleaned up. See {0} for results.".format(out_file.name))
     else:
-        print("An email was sent to {0}".format(email), file=sys.stdout)
+        print("An email was sent to {0}".format(email))
 
 
 if __name__ == '__main__':
@@ -125,12 +160,19 @@ if __name__ == '__main__':
                               ' of tokens to search the repo for'))
     parser.add_argument('-e', '--email',
                         help='Email the results to the given email address.')
+    parser.add_argument('--nightly', action='store_true',
+                        help=('If you supply an email, this option will grep'
+                              ' and email you the results (assuming there is'
+                              ' something new to report) every 24 hours.'))
     args = parser.parse_args()
     repo_url = args.repo
     repo_name = get_repo_name(repo_url)
     tokens = args.tokens
     email = args.email
     date = datetime.datetime.now().strftime("%m-%d-%Y")
+    # TODO: if args.nightly runs on a 24 hour interval,
+    # i can skip the lasthead.txt and keep the SHA in memory. otherwise run the
+    # script on cron and use the lasthead.txt as a proxy for has_run
     out_file = open(repo_name + '.html', 'w+')
     clone_repo(repo_url)
     write_to_disk()
