@@ -109,7 +109,7 @@ def send_email():
     to change this if you don't have the password. This isn't very flexible
     but it serves my needs. Pull requests welcome, etc.'''
     from_addr = 'commitgrep@gmail.com'
-    to_addr = email
+    to_addr = args.email
     passwd = open(os.path.join(os.getcwd(), os.pardir) + '/password.txt', 'r')
     # seek back to the beginning of the file
     out_file.seek(0)
@@ -130,12 +130,12 @@ def send_email():
 def write_to_disk():
     '''Dump all the strings in a file, optionally emailing it.'''
     print(get_header(repo_name), file=out_file)
-    for token in tokens:
+    for token in args.tokens:
         print(get_thead(token), file=out_file)
         print(grep_logs(token, repo_url, get_from_sha())
               + "</table>", file=out_file)
-    if email:
-        if re.match(r'[^@]+@[^@]+\.[^@]+', email):
+    if args.email:
+        if re.match(r'[^@]+@[^@]+\.[^@]+', args.email):
             send_email()
         else:  # TODO: raise this earlier
             raise Exception("Is your email address correct?")
@@ -145,10 +145,10 @@ def write_to_disk():
 def clean_up():
     os.chdir(os.pardir)
     shutil.rmtree(os.path.join(os.getcwd(), repo_name))
-    if not email:
+    if not args.email:
         print("All cleaned up. See {0} for results.".format(out_file.name))
     else:
-        print("An email was sent to {0}".format(email))
+        print("An email was sent to {0}".format(args.email))
 
 
 if __name__ == '__main__':
@@ -164,14 +164,11 @@ if __name__ == '__main__':
                               ' and email you the results (assuming there is'
                               ' something new to report) every 24 hours.'))
     args = parser.parse_args()
-    repo_url = args.repo
-    repo_name = get_repo_name(repo_url)
-    tokens = args.tokens
-    email = args.email
+    repo_name = get_repo_name(args.repo)
     date = datetime.datetime.now().strftime("%m-%d-%Y")
     # TODO: if args.nightly runs on a 24 hour interval,
     # i can skip the lasthead.txt and keep the SHA in memory. otherwise run the
     # script on cron and use the lasthead.txt as a proxy for has_run
     out_file = open(repo_name + '.html', 'w+')
-    clone_repo(repo_url)
+    clone_repo(args.repo)
     write_to_disk()
