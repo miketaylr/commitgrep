@@ -62,8 +62,7 @@ def get_row(repo_url):
 def get_from_sha():
     '''
     If we've passed in the --nightly flag, this will return the SHA of the HEAD
-    of the last time we've grepped the logs. Otherwise, it returns an empty
-    string (which means search begins at the beginning of history.'''
+    of the last time we've grepped the logs. Otherwise, it returns None.'''
     if args.nightly:
         global has_run
         if not has_run:
