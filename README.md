@@ -7,7 +7,23 @@ This utility clones a github hosted repository, runs `git log -S<token>`, and cr
 You'll get an .html file that looks something like this: http://miketaylr.github.io/commitgrep/. Or exactly like that.
 
 ### Usage
-`python commitgrep.py repourl token [, token, ...]`
+```
+usage: commitgrep.py [-h] [-e EMAIL] [--relative] repo tokens [tokens ...]
+
+positional arguments:
+  repo           Github git repo URL
+  tokens         token [, token , ...]. A space separated list of tokens to
+                 search the repo for
+
+optional arguments:
+  -h, --help     show this help message and exit
+  --email EMAIL  Email the results to the given email address.
+  --relative     This option will grep the repo relative to the last    time it
+                 was run, creating a lasthead.txt file to keep track of this.
+                 This may be useful to run every 24 hours via CRON, etc.
+```
+
+### Examples
 
 To create a file named jquery.html which greps for commits that have something to do with the tokens `firefox` and `gecko`:
 
@@ -16,12 +32,6 @@ To create a file named jquery.html which greps for commits that have something t
 To email the results grepping over jquery's repo for "event":
 
 `python commitgrep.py --email=foo@bar.com --relative https://github.com/jquery/jquery.git event`
-
-### Email
-
-If you pass in the optional `--email` argument, the script will send you an email from `commitgrep@gmail.com` with the commits containing the tokens rather than create an html file.
-
-*TODO*: If it's the first time it is run, you'll get the output for the entire history of the repo. Subsequent repos will compare only the commits made since the last run, and if there's no match no email will be sent.
 
 ### License
 
