@@ -132,7 +132,7 @@ def write_to_disk():
     print(get_header(repo_name), file=out_file)
     for token in args.tokens:
         print(get_thead(token), file=out_file)
-        print(grep_logs(token, repo_url, get_from_sha())
+        print(grep_logs(token, args.repo, get_from_sha())
               + "</table>", file=out_file)
     if args.email:
         if re.match(r'[^@]+@[^@]+\.[^@]+', args.email):
