@@ -13,6 +13,10 @@ To create a file named jquery.html which greps for commits that have something t
 
 `python commitgrep.py git@github.com:jquery/jquery.git firefox gecko`
 
+To email the results grepping over jquery's repo for "event":
+
+`python commitgrep.py --email=foo@bar.com --nightly https://github.com/jquery/jquery.git event`
+
 ### Email
 
 If you pass in the optional `--email` argument, the script will send you an email from `commitgrep@gmail.com` with the commits containing the tokens rather than create an html file.
