@@ -135,6 +135,9 @@ def write_to_disk():
         print(grep_logs(token, args.repo, get_from_sha())
               + "</table>", file=out_file)
     if args.email:
+        # TODO if --relative and no output, don't bother sending an email.
+        # Could infer this based on the size of an "empty" file? Or presence of
+        # </thead>\n</table>
         send_email()
     clean_up()
 
