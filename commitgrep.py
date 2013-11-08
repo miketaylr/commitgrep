@@ -162,13 +162,11 @@ if __name__ == '__main__':
     parser.add_argument('--nightly', action='store_true',
                         help=('If you supply an email, this option will grep'
                               ' and email you the results (assuming there is'
-                              ' something new to report) every 24 hours.'))
+                              ' something new to report). This might be '
+                              ' useful to run every 24 hours via CRON, etc.'))
     args = parser.parse_args()
     repo_name = get_repo_name(args.repo)
     date = datetime.datetime.now().strftime("%m-%d-%Y")
-    # TODO: if args.nightly runs on a 24 hour interval,
-    # i can skip the lasthead.txt and keep the SHA in memory. otherwise run the
-    # script on cron and use the lasthead.txt as a proxy for has_run
     out_file = open(repo_name + '.html', 'w+')
     clone_repo(args.repo)
     write_to_disk()
