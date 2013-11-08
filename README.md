@@ -15,7 +15,7 @@ To create a file named jquery.html which greps for commits that have something t
 
 To email the results grepping over jquery's repo for "event":
 
-`python commitgrep.py --email=foo@bar.com --nightly https://github.com/jquery/jquery.git event`
+`python commitgrep.py --email=foo@bar.com --relative https://github.com/jquery/jquery.git event`
 
 ### Email
 

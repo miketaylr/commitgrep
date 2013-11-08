@@ -61,9 +61,9 @@ def get_row(repo_url):
 
 def get_from_sha():
     '''
-    If we've passed in the --nightly flag, this will return the SHA of the HEAD
+    If we've passed in the --relative flag, this will return the SHA of the HEAD
     of the last time we've grepped the logs. Otherwise, it returns None.'''
-    if args.nightly:
+    if args.relative:
         global has_run
         if has_run is True:
             try:
@@ -159,10 +159,10 @@ if __name__ == '__main__':
                               ' of tokens to search the repo for'))
     parser.add_argument('-e', '--email',
                         help='Email the results to the given email address.')
-    parser.add_argument('--nightly', action='store_true',
-                        help=('If you supply an email, this option will grep'
-                              ' and email you the results (assuming there is'
-                              ' something new to report). This might be '
+    parser.add_argument('--relative', action='store_true',
+                        help=('This option will grep the repo relative to the '
+                              ' last time it was run, creating a lasthead.txt '
+                              ' file to keep track of this. This may be '
                               ' useful to run every 24 hours via CRON, etc.'))
     args = parser.parse_args()
     repo_name = get_repo_name(args.repo)
