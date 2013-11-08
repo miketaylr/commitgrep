@@ -157,7 +157,7 @@ if __name__ == '__main__':
     parser.add_argument('tokens', nargs='+',
                         help=('token [, token , ...]. A space separated list'
                               ' of tokens to search the repo for'))
-    parser.add_argument('-e', '--email',
+    parser.add_argument('--email',
                         help='Email the results to the given email address.')
     parser.add_argument('--relative', action='store_true',
                         help=('This option will grep the repo relative to the '
