@@ -135,10 +135,7 @@ def write_to_disk():
         print(grep_logs(token, args.repo, get_from_sha())
               + "</table>", file=out_file)
     if args.email:
-        if re.match(r'[^@]+@[^@]+\.[^@]+', args.email):
-            send_email()
-        else:  # TODO: raise this earlier
-            raise Exception("Is your email address correct?")
+        send_email()
     clean_up()
 
 
@@ -165,6 +162,8 @@ if __name__ == '__main__':
                               ' file to keep track of this. This may be '
                               ' useful to run every 24 hours via CRON, etc.'))
     args = parser.parse_args()
+    if args.email and not re.match(r'[^@]+@[^@]+\.[^@]+', args.email):
+        raise Exception("Is your email address correct?")
     repo_name = get_repo_name(args.repo)
     date = datetime.datetime.now().strftime("%m-%d-%Y")
     out_file = open(repo_name + '.html', 'w+')
