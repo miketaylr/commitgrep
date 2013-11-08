@@ -65,7 +65,7 @@ def get_from_sha():
     of the last time we've grepped the logs. Otherwise, it returns None.'''
     if args.nightly:
         global has_run
-        if not has_run:
+        if has_run is True:
             try:
                 head_file = open(os.path.join(os.getcwd(), os.pardir)
                                  + '/lasthead.txt', 'r')
